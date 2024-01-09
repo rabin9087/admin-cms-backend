@@ -29,9 +29,12 @@ app.get("/", (req, res) => {
 })
 
 app.use((error, req, res, next) => {
+    console.log(error, "---------------")
     const errorCode = error.errorCode || 500
+
     res.status(errorCode).json({
         status: "error",
+        code: errorCode,
         message: error.message
     })
 })
