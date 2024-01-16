@@ -74,3 +74,60 @@ export const sendEmailVerifiedNotificationEmail = ({ email, fName }) => {
 
     emailSender(body)
 }
+
+export const sendOTPEmail = ({ email, fName, otp }) => {
+    const body = {
+        from: `"Tech Gare 👻" <${process.env.SMPT_USER}>`, // sender address
+        to: email, // list of receivers
+        subject: "Your OTP for password reset", // Subject line
+        text: `Hello ${fName}, here is your otp ${otp} \n\n Regards, \n Tech Gare`, // plain text body
+        html: `<p>Hello ${fName}</p>
+        <br/> <br/>
+        <p>Here is th eOPT to set Your password</p>
+        <p style="font-size:3rem; color: red">
+          ${otp}
+        </p>
+    
+        <br/>
+        <br/>
+        -----------
+        <p>
+            Regards, 
+            <br/>
+            Tech Gare 
+            <br/>
+    
+        </p>`
+
+        // html body
+    }
+
+    emailSender(body)
+}
+
+export const passwordUpdateNotificationEmail = ({ email, fName }) => {
+    const body = {
+        from: `"Tech Gare 👻" <${process.env.SMPT_USER}>`, // sender address
+        to: email, // list of receivers
+        subject: "Your password has been updated", // Subject line
+        text: `Hello ${fName}, Your password has been updated. If this was not you please contact us or change password ASAP \n\n Regards, \n Tech Gare`, // plain text body
+        html: `<p>Hello ${fName}</p>
+        <br/> <br/>
+        <p>Hello ${fName}, Your password has been updated. If this was not you please contact us or change password ASAP</p>
+       
+        <br/>
+        <br/>
+        -----------
+        <p>
+            Regards, 
+            <br/>
+            Tech Gare 
+            <br/>
+    
+        </p>`
+
+        // html body
+    }
+
+    emailSender(body)
+}

@@ -1,19 +1,111 @@
 import express from 'express'
-import { hashPassword } from '../utils/bcrypt.js'
-import { newAdminValidate } from '../middlewares/joiValidation.js'
+import { comparePassword, hashPassword } from '../utils/bcrypt.js'
+import { newAdminValidate, resetPasswordValidate } from '../middlewares/joiValidation.js'
 import { responder } from '../middlewares/response.js'
 import { v4 as uuidv4 } from 'uuid';
-import { sendEmailVerifiedNotificationEmail, sendEmailVerificationLinkEMail } from '../utils/nodemailer.js'
-import { insertUser, updateUser } from '../modules/user/UserModule.js';
+import { sendEmailVerifiedNotificationEmail, sendEmailVerificationLinkEMail, sendOTPEmail, passwordUpdateNotificationEmail } from '../utils/nodemailer.js'
+import { getAUser, getUserByEmail, insertUser, updateUser } from '../modules/user/UserModule.js';
 import { createNewSession, deleteSession } from '../modules/session/SessionSchema.js';
+import { getJwts } from '../utils/jwt.js';
+import { adminAuth, refreshAuth } from '../middlewares/authMiddleware.js';
+import { OTPGenerator } from '../utils/randomGenerator.js';
 
 const router = express.Router()
 
+
+//public router
+router.post("/signIn", async (req, res, next) => {
+    try {
+
+        const { email, password } = req.body
+        if (email, password) {
+            //get user by email
+            const user = await getUserByEmail({ email })
+
+            if (user?.status === "inactive") {
+                return responder.ERROR({
+                    res,
+                    message: "Your account has not been verified, Please check your email and verify it!"
+                })
+            }
+
+            if (user?._id) {
+                //verify password match
+                const isPasswordMatch = comparePassword(password, user.password)
+
+                if (isPasswordMatch) {
+
+                    const jwts = await getJwts(email)
+                    return responder.SUCCESS({
+                        jwts,
+                        res,
+                        message: "Login success"
+                    })
+                }
+                return responder.ERROR({
+                    res,
+                    status: "error",
+                    message: "Password does not match, Please try again!"
+                })
+            }
+
+            //create token
+            //response token
+        }
+
+        responder.ERROR({
+            res,
+            status: "error",
+            message: "Unable to create user, Please try again!"
+        })
+
+
+    } catch (error) {
+        if (error.message.includes("E11000 duplicate key error")) {
+            error.errorCode = 500;
+            error.messsage = "user already exist!!!!!!!!!!!!!"
+        }
+        next(error)
+    }
+})
+
+//verify user email
+
+router.post("/verify-email", async (req, res, next) => {
+    try {
+        const { associate, token } = req.body
+        if (associate && token) {
+            //delete from session
+            const session = await deleteSession({ token, associate })
+            //if success, then update user status to active
+            console.log(session)
+            if (session) {
+                //update user table
+                const user = await updateUser({ email: associate }, { status: "active" })
+
+                if (user?._id) {
+                    //send email notification
+                    sendEmailVerifiedNotificationEmail({ email: associate, fName: user.fName })
+                    return responder.SUCCESS({ res, message: "Your email verified, You can login now" })
+                }
+            }
+            else {
+                return responder.ERROR({ res, message: "Invalid or expired Link" })
+
+            }
+        }
+    } catch (error) {
+        next(error)
+    }
+
+})
+
+// private router
 router.post("/", newAdminValidate, async (req, res, next) => {
     try {
 
         const { password } = req.body
-        console.log("Router:::", req.body)
+
         req.body.password = hashPassword(password)
 
         const user = await insertUser(req.body)
@@ -49,37 +141,98 @@ router.post("/", newAdminValidate, async (req, res, next) => {
     }
 })
 
-
-//verify user email
-
-router.post("/verify-email", async (req, res, next) => {
+router.get("/", adminAuth, (req, res, next) => {
     try {
-        const { associate, token } = req.body
-        if (associate && token) {
-            //delete from session
-            const session = await deleteSession({ token, associate })
-            //if success, then update user status to active
-            console.log(session)
-            if (session) {
-                //update user table
-                const user = await updateUser({ email: associate }, { status: "active" })
-
-                if (user?._id) {
-                    //send email notification
-                    sendEmailVerifiedNotificationEmail({ email: associate, fName: user.fName })
-                    return responder.SUCCESS({ res, message: "Your email verified, You can login now" })
-                }
-            }
-            else {
-                return responder.ERROR({ res, message: "Invalid or expired Link" })
-
-            }
-        }
+        responder.SUCCESS({ res, message: "here is the user ", user: req.userInfo })
     } catch (error) {
         next(error)
     }
-
 })
 
+router.get("/get-accessjwt", refreshAuth)
+
+//logout user
+router.post("/logout", async (req, res, next) => {
+    try {
+        const { accessJWT, _id } = req.body
+        accessJWT && await deleteSession({
+            token: accessJWT
+        })
+
+        await updateUser({ _id }, { refreshJWT: "" })
+
+        responder.SUCCESS({ res, message: "User is logged out successfully" })
+    } catch (error) {
+        next(error)
+    }
+})
+
+//otp request
+router.post("/request-otp", async (req, res, next) => {
+    try {
+        const { email } = req.body
+        if (email.includes("@")) {
+
+
+            //check if user exist
+            const user = await getAUser({ email })
+
+            if (user?._id) {
+                //create unique OTP
+                const otp = OTPGenerator()
+                console.log(otp)
+                //store otp and email in the session table
+                const otpSession = await createNewSession({ token: otp, associate: email })
+
+                if (otpSession?._id) {
+                    //send email to user
+                    //reqponse user
+                    sendOTPEmail({ fName: user.fName, email, otp })
+                }
+            }
+        }
+        responder.SUCCESS({
+            res,
+            message: "OTP has been send, please check your email including junk folder",
+
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
+//password update
+router.patch("/", resetPasswordValidate, async (req, res, next) => {
+    try {
+        const { email, otp, password } = req.body
+
+        const session = await deleteSession({
+            token: otp, associate: email
+        })
+
+        if(session?._id){
+            const hashPass = hashPassword(password)
+            const user = await updateUser({email}, {password: hashPass})
+
+            if(user?._id){
+                //send email notification
+                passwordUpdateNotificationEmail({fName: user.fName, email})
+                responder.SUCCESS({
+                    res,
+                    message: "Your Password has been updated",
+        
+                })
+            }
+        }
+        
+        responder.ERROR({
+            res,
+            message: "Invalid otp, unable to update password!",
+
+        })
+    } catch (error) {
+        next(error)
+    }
+})
 
 export default router;

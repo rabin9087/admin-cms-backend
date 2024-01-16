@@ -1,0 +1,27 @@
+@rootURL = http://localhost:8000/api/v1
+
+@userApi = {{rootURL}}/users
+
+#========== user api
+
+### login user
+POST {{userApi}}/signin
+Content-Type: application/json
+
+{
+    "email": "rabin9087@gmail.com",
+    "password": "Rabin@123"
+}
+
+### get user profile
+GET {{userApi}}
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUyODAzMDEsImV4cCI6MTcwNTI4MzkwMX0.Xy8on1OG-7IF66mifTs4EJKMkxDz1PPkztKW5eimNmA
+
+### OTP request
+POST {{userApi}}/request-otp
+Content-Type: application/json
+
+{
+    "email": "rabin9087@gmail.com"
+}
