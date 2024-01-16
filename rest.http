@@ -25,3 +25,13 @@ Content-Type: application/json
 {
     "email": "rabin9087@gmail.com"
 }
+### update password
+PATCH  {{userApi}}/password
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzIwNjUsImV4cCI6MTcwNTM3Mjk2NX0.NfufQ7qzpTU7ySC73LhbSmGLzwDcpTfpqc0hyXMXp-Q
+Content-Type: application/json
+
+{
+    "oldPassword": "Rabin@123",
+    "newPassword": "Rabin@9087"
+}
+

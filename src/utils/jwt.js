@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { createNewSession } from '../modules/session/SessionSchema.js'
 import { updateUser } from '../modules/user/UserModule.js'
 export const createAccessJWTTokne = async (email) => {
-    const token = jwt.sign({ email }, process.env.ACCESSJWT_SECRET,{ expiresIn: '1m' })
+    const token = jwt.sign({ email }, process.env.ACCESSJWT_SECRET,{ expiresIn: '15m' })
     await createNewSession({
         token, associate: email
     })

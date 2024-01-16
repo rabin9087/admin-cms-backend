@@ -4,7 +4,7 @@ import { newAdminValidate, resetPasswordValidate } from '../middlewares/joiValid
 import { responder } from '../middlewares/response.js'
 import { v4 as uuidv4 } from 'uuid';
 import { sendEmailVerifiedNotificationEmail, sendEmailVerificationLinkEMail, sendOTPEmail, passwordUpdateNotificationEmail } from '../utils/nodemailer.js'
-import { getAUser, getUserByEmail, insertUser, updateUser } from '../modules/user/UserModule.js';
+import { getAUser, getAdminPasswordbyID, getUserByEmail, insertUser, updateUser } from '../modules/user/UserModule.js';
 import { createNewSession, deleteSession } from '../modules/session/SessionSchema.js';
 import { getJwts } from '../utils/jwt.js';
 import { adminAuth, refreshAuth } from '../middlewares/authMiddleware.js';
@@ -201,7 +201,7 @@ router.post("/request-otp", async (req, res, next) => {
     }
 })
 
-//password update
+//password reset
 router.patch("/", resetPasswordValidate, async (req, res, next) => {
     try {
         const { email, otp, password } = req.body
@@ -210,26 +210,52 @@ router.patch("/", resetPasswordValidate, async (req, res, next) => {
             token: otp, associate: email
         })
 
-        if(session?._id){
+        if (session?._id) {
             const hashPass = hashPassword(password)
-            const user = await updateUser({email}, {password: hashPass})
+            const user = await updateUser({ email }, { password: hashPass })
 
-            if(user?._id){
+            if (user?._id) {
                 //send email notification
-                passwordUpdateNotificationEmail({fName: user.fName, email})
+                passwordUpdateNotificationEmail({ fName: user.fName, email })
                 responder.SUCCESS({
                     res,
                     message: "Your Password has been updated",
-        
+
                 })
             }
         }
-        
+
         responder.ERROR({
             res,
             message: "Invalid otp, unable to update password!",
 
         })
+    } catch (error) {
+        next(error)
+    }
+})
+
+//password update
+router.patch("/password", adminAuth, async (req, res, next) => {
+    try {
+        //get user info, 
+        const user = req.userInfo
+        const { oldPassword, newPassword } = req.body
+        const { password } = await getAdminPasswordbyID(user._id)
+        //get password from db by user?._id
+        //match the old pass with db pass
+        const isMatched = comparePassword(oldPassword, password)
+        if (isMatched) {
+            const newHashPassword = hashPassword(newPassword)
+            const updatedUserPass = await updateUser({ _id: user._id }, { password: newHashPassword })
+            if (updatedUserPass?._id) {
+                passwordUpdateNotificationEmail({ fName: user.fName, email: user.email })
+                return responder.SUCCESS({ res, message: "Your password has been updated" })
+            }
+        }
+
+        responder.ERROR({ res, message: "Unable to update password, try again!" })
+
     } catch (error) {
         next(error)
     }
