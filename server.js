@@ -4,6 +4,8 @@ import cors from 'cors'
 import morgan from 'morgan'
 import userRouter from './src/routers/userRouter.js'
 import { connectDB } from './src/config/mongoConfig.js'
+import categoryRouter from "./src/routers/categoryRouter.js"
+import { adminAuth } from "./src/middlewares/authMiddleware.js"
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -19,6 +21,7 @@ app.use(morgan("tiny"))
 
 //local middleware
 app.use("/api/v1/users", userRouter)
+app.use("/api/v1/categories", adminAuth, categoryRouter)
 
 
 app.get("/", (req, res) => {

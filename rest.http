@@ -1,25 +1,27 @@
 @rootURL = http://localhost:8000/api/v1
 
 @userApi = {{rootURL}}/users
+@categoryApi = {{rootURL}}/categories
 
 #========== user api
 
 ### login user
 POST {{userApi}}/signin
-Content-Type: application/json
+ContecategoryApint-Type: application/json
 
 {
     "email": "rabin9087@gmail.com",
-    "password": "Rabin@123"
+    "password": "Rabin@9087"
 }
 
 ### get user profile
 GET {{userApi}}
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUyODAzMDEsImV4cCI6MTcwNTI4MzkwMX0.Xy8on1OG-7IF66mifTs4EJKMkxDz1PPkztKW5eimNmA
 
 ### OTP request
 POST {{userApi}}/request-otp
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
 Content-Type: application/json
 
 {
@@ -34,4 +36,38 @@ Content-Type: application/json
     "oldPassword": "Rabin@123",
     "newPassword": "Rabin@9087"
 }
+
+
+#========user api
+###C
+POST  {{categoryApi}}
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+Content-Type: application/json
+
+{
+    "title": "Mobile"
+}
+
+
+###R
+GET   {{categoryApi}}
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+Content-Type: application/json
+
+
+###U
+PUT   {{categoryApi}}
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+Content-Type: application/json
+
+{
+    "_id": "65a6039ff4881b6724719fc3",
+    "title": "Laptop",
+    "status": "active"
+}
+
+###D
+DELETE   {{categoryApi}}/65a6039ff4881b6724719fc3
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+
 
