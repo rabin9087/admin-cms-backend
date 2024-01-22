@@ -2,12 +2,14 @@
 
 @userApi = {{rootURL}}/users
 @categoryApi = {{rootURL}}/categories
+@productApi = {{rootURL}}/products
 
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDU4ODE1OTMsImV4cCI6MTcwNTg4MjQ5M30.K8vGOX206MtUbwRcBeoZX-rkPbE9JfuccCAd4Tw5exM
 #========== user api
 
 ### login user
 POST {{userApi}}/signin
-ContecategoryApint-Type: application/json
+Content-Type: application/json
 
 {
     "email": "rabin9087@gmail.com",
@@ -16,12 +18,12 @@ ContecategoryApint-Type: application/json
 
 ### get user profile
 GET {{userApi}}
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+Authorization: {{token}}
 Content-Type: application/json
 
 ### OTP request
 POST {{userApi}}/request-otp
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -29,7 +31,7 @@ Content-Type: application/json
 }
 ### update password
 PATCH  {{userApi}}/password
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzIwNjUsImV4cCI6MTcwNTM3Mjk2NX0.NfufQ7qzpTU7ySC73LhbSmGLzwDcpTfpqc0hyXMXp-Q
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -41,7 +43,7 @@ Content-Type: application/json
 #========user api
 ###C
 POST  {{categoryApi}}
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -51,13 +53,13 @@ Content-Type: application/json
 
 ###R
 GET   {{categoryApi}}
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+Authorization: {{token}}
 Content-Type: application/json
 
 
 ###U
 PUT   {{categoryApi}}
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -68,6 +70,34 @@ Content-Type: application/json
 
 ###D
 DELETE   {{categoryApi}}/65a6039ff4881b6724719fc3
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluOTA4N0BnbWFpbC5jb20iLCJpYXQiOjE3MDUzNzgyNzEsImV4cCI6MTcwNTM3OTE3MX0.4K1FvVUtAOpOK-XWW7xZsMbTWzIXF-hyuKuQUaagPA0
+Authorization: {{token}}
 
 
+#======== product
+###R
+GET   {{productApi}}
+Authorization: {{token}}
+Content-Type: application/json
+
+
+###U
+POST   {{productApi}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+         "name": "Iphone pro 15",
+        "parentCatId": "65a603aaf4881b6724719fcb",
+        "sku": "Ip-15PRO",
+        "price": 2199,
+        "qty": 100,
+        "salesPrice": 1999,
+        "description": "Display: Super Retina XDR 6.7-inch OLED with a resolution of 2796 x 1290 pixels at 460 ppi. Camera: Enhanced zoom capabilities and lighter build compared to its predecessor. Specs: Detailed technical specifications available on Apple's official siteand other sources like GSM Arena and PhoneArena. Reviews and Features: MacRumors and The Guardian offer insights into features and reviews. Availability: Check with carriers like Vodafone and Telstra for specific plans and offers."
+}
+
+###D
+DELETE   {{productApi}}/
+Authorization: {{token}}
+
+ # "salesStartDate": SHORTSTR,
+        # "salesEndDate": SHORTSTR,

@@ -15,7 +15,6 @@ const transporter = nodemailer.createTransport({
 const emailSender = async (obj) => {
     try {
         const info = await transporter.sendMail(obj);
-        console.log("Message sent: %s", info.messageId);
     } catch (error) {
         console.log(error)
     }
@@ -32,12 +31,11 @@ export const sendEmailVerificationLinkEMail = ({ email, fName, url }) => {
         <p>thank you for creating account with us. Click the button to verify your account</p>
         <p>
             <a href=${url}>
-                <button style="background: green; padding: 1rem; color white; font-weight: bolder">Verify</button>
+                <button style="background: green; padding: 1rem; color: white; font-weight: bolder">Verify</button>
             </a>
         </p>
     
         <br/>
-        <p>If </p>
         <br/>
         -----------
         <p>

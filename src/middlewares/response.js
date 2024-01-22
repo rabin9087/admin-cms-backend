@@ -1,5 +1,3 @@
-
-
 export const responder = {
     SUCCESS: ({res, errorCode = 200, ...rest}) => {
         res.status(errorCode).json({

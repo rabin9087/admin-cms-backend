@@ -63,7 +63,7 @@ router.post("/signIn", async (req, res, next) => {
     } catch (error) {
         if (error.message.includes("E11000 duplicate key error")) {
             error.errorCode = 500;
-            error.messsage = "user already exist!!!!!!!!!!!!!"
+            error.messsage = "user already exist!"
         }
         next(error)
     }
@@ -78,7 +78,6 @@ router.post("/verify-email", async (req, res, next) => {
             //delete from session
             const session = await deleteSession({ token, associate })
             //if success, then update user status to active
-            console.log(session)
             if (session) {
                 //update user table
                 const user = await updateUser({ email: associate }, { status: "active" })
@@ -109,7 +108,6 @@ router.post("/", newAdminValidate, async (req, res, next) => {
         req.body.password = hashPassword(password)
 
         const user = await insertUser(req.body)
-        console.log("user:bn", user)
         if (user?._id) {
             const c = uuidv4();//this must be store in db
             const token = await createNewSession({ token: c, associate: user.email })
@@ -135,7 +133,7 @@ router.post("/", newAdminValidate, async (req, res, next) => {
     } catch (error) {
         if (error.message.includes("E11000 duplicate key error")) {
             error.errorCode = 500;
-            error.messsage = "user already exist!!!!!!!!!!!!!"
+            error.messsage = "user already exist!"
         }
         next(error)
     }
@@ -180,7 +178,6 @@ router.post("/request-otp", async (req, res, next) => {
             if (user?._id) {
                 //create unique OTP
                 const otp = OTPGenerator()
-                console.log(otp)
                 //store otp and email in the session table
                 const otpSession = await createNewSession({ token: otp, associate: email })
 
