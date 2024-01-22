@@ -3,7 +3,7 @@ import { responder } from './response.js'
 
 const SHORTSTR = Joi.string().max(100).allow(null, "")
 const SHORTSTRREQUIRED = SHORTSTR.required()
-const NUM = Joi.number()
+const NUM = Joi.number().allow(null, "")
 const NUMREQUIRED = NUM.required()
 const LONGSTR = Joi.string().max(500).allow(null, "")
 const LONGSTRREQUIRED = LONGSTR.required()
@@ -44,6 +44,7 @@ export const resetPasswordValidate = (req, res, next) => {
 }
 
 export const newProductValidate = (req, res, next) => {
+  
     const schema = Joi.object({
         // status: SHORTSTRREQUIRED,
         name: SHORTSTRREQUIRED,
@@ -55,6 +56,26 @@ export const newProductValidate = (req, res, next) => {
         description: LONGSTRREQUIRED,
         salesStartDate: SHORTSTR,
         salesEndDate: SHORTSTR,
+    })
+    joiValidator({ schema, req, res, next })
+}
+
+export const updateProductValidate = (req, res, next) => {
+  
+    const schema = Joi.object({
+        status: SHORTSTRREQUIRED,
+        _id: SHORTSTRREQUIRED,
+        name: SHORTSTRREQUIRED,
+        parentCatId: SHORTSTRREQUIRED,
+        price: NUMREQUIRED,
+        qty: NUMREQUIRED,
+        salesPrice: NUM,
+        description: LONGSTRREQUIRED,
+        salesStartDate: SHORTSTR,
+        salesEndDate: SHORTSTR,
+        images: LONGSTRREQUIRED,
+        thumbnail: LONGSTRREQUIRED,
+        imgToDelete: LONGSTR
     })
     joiValidator({ schema, req, res, next })
 }

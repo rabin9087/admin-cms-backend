@@ -8,6 +8,10 @@ export const updateProduct = (filter, update) => {
     return ProductSchema.findOneAndUpdate(filter, update, { new: true })
 }
 
+export const updateProductById = ({_id, ...rest}) => {
+    return ProductSchema.findOneAndUpdate({_id}, rest, { new: true })
+}
+
 export const getProducts = () => {
     return ProductSchema.find()
 }

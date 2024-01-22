@@ -7,7 +7,7 @@ import { connectDB } from './src/config/mongoConfig.js'
 import categoryRouter from "./src/routers/categoryRouter.js"
 import { adminAuth } from "./src/middlewares/authMiddleware.js"
 import productRouter from "./src/routers/productRouter.js"
-
+import path from 'path'
 const app = express()
 const PORT = process.env.PORT || 8000
 
@@ -19,6 +19,10 @@ connectDB()
 app.use(cors())
 app.use(express.json())
 app.use(morgan("tiny"))
+
+//server statice files
+const __dirname = path.resolve()
+app.use(express.static(path.join(__dirname, "/public")))
 
 //local middleware
 app.use("/api/v1/users", userRouter)

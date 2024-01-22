@@ -37,20 +37,21 @@ export const adminAuth = async (req, res, next) => {
 export const refreshAuth = async (req, res, next) => {
     try {
         const { authorization } = req.headers
+        console.log(authorization, "kjnckjb========")
         const decoded = verifyRefreshJWTTokne(authorization)
-
+        console.log(decoded, "HGHJI++++")
         if (decoded?.email) {
             const user = await getAUser({ email: decoded.email }, { refreshJWT: authorization })
             if (user?._id && user?.status === "active") {
                 const accessJWT = await createAccessJWTTokne(decoded.email)
-
+                console.log(accessJWT, "HGHJI++++")
                 return responder.SUCCESS({ res, message: "Here is the accessJWT", accessJWT })
             }
         }
         responder.ERROR({ res, errorCode: 401, message: "Unauthorized user" })
     } catch (error) {
-        
-        if(error.message.includes("jwt expired")){
+        console.log(error.message)
+        if(error.message.includes("jwt must be provided")){
            return responder.ERROR({
                 res, errorCode: 403,
                 message: "jwt expired",
