@@ -18,15 +18,15 @@ connectDB()
 
 app.use(cors())
 app.use(express.json())
-app.use(morgan("tiny"))
+app.use(morgan("    "))
 
-//server statice files
-const __dirname = path.resolve()
-app.use(express.static(path.join(__dirname, "/public")))
+// //server statice files
+// const __dirname = path.resolve()
+// app.use(express.static(path.join(__dirname, "/public")))
 
 //local middleware
 app.use("/api/v1/users", userRouter)
-app.use("/api/v1/categories", adminAuth, categoryRouter)
+app.use("/api/v1/categories", categoryRouter)
 app.use("/api/v1/products", adminAuth, productRouter)
 
 

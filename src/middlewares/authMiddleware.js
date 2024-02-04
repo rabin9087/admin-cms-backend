@@ -20,7 +20,6 @@ export const adminAuth = async (req, res, next) => {
                     req.userInfo = user
                     return next()
                 }
-
             }
         }
         //get the user and check if active 

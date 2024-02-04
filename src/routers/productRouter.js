@@ -1,5 +1,8 @@
 import express from 'express'
 import multer from 'multer'
+import multerS3 from 'multer-s3'
+import AWS from 'aws-sdk'
+import { S3Client } from '@aws-sdk/client-s3'
 import { responder } from '../middlewares/response.js'
 import slugify from 'slugify'
 import { newProductValidate, updateProductValidate } from '../middlewares/joiValidation.js'
@@ -7,8 +10,43 @@ import { getAProduct, getProducts, insertProduct, updateProduct, updateProductBy
 // import { deleteACategory, getCategories, insertCategory, updateCategory } from '../modules/category/CategoryModel.js'
 const router = express.Router()
 
+const BUCKET_NAME = process.env.BUCKET_NAME
+const REGION = process.env.REGION
+const ACCESS_KEY = process.env.ACCESS_KEY
+const SECRET_KEY = process.env.SECRET_KEY
+
+//s3 client
+// const s3 = new AWS.S3({
+//     credentials: {
+//         accessKeyId: ACCESS_KEY,
+//         secretAccessKey: SECRET_KEY
+//     },
+//     region: REGION
+// })
+
+const client = new S3Client({
+    region: REGION, credentials: { accessKeyId: ACCESS_KEY, secretAccessKey: SECRET_KEY }
+});
+
 
 //multer config
+
+const upload = multer({
+    storage: multerS3({
+        s3: client,
+        bucket: BUCKET_NAME,
+        metadata: function (req, file, cb) {
+            let error = null
+            cb(error, { filename: file.fieldname })
+        },
+        key: function (req, file, cb) {
+            cb(null, Date.now() + "-" + file.originalname)
+        }
+    })
+})
+
+
+
 const imgFolderPath = "public/img/product"
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -23,13 +61,14 @@ const storage = multer.diskStorage({
 })
 //end multer config
 
-const upload = multer({ storage })
+//const upload = multer({ storage })
+
+
 //create new category
 router.post("/", upload.array("images", 5), newProductValidate, async (req, res, next) => {
     try {
-        const files = req.files
         if (req.files?.length) {
-            const newImgs = req.files.map((item) => item.path?.slice(6))
+            const newImgs = req.files.map((item) => item.location)
             req.body.images = newImgs
             req.body.thumbnail = newImgs[0]
         }
@@ -38,6 +77,7 @@ router.post("/", upload.array("images", 5), newProductValidate, async (req, res,
         //insert into db 
 
         const product = await insertProduct(req.body)
+    
         product?._id ?
             responder.SUCCESS({
                 res, message: "New Product has been added successfully"

@@ -41,7 +41,7 @@ router.get("/", async (req, res, next) => {
     try {
         const categories = await getCategories()
         responder.SUCCESS({
-            res, message: "TO do get", categories
+            res, message: "Here are lists of all Categories", categories
         })
     } catch (error) {
         next(error)
@@ -54,7 +54,7 @@ router.put("/", async (req, res, next) => {
         const { _id, title, status } = req.body
         if (_id && title && status) {
             const cat = await updateCategory({ _id }, { title, status })
-            if(cat?._id){
+            if (cat?._id) {
                 return responder.SUCCESS({
                     res, message: "The Category has been updated successfully"
                 })
@@ -69,18 +69,18 @@ router.put("/", async (req, res, next) => {
 })
 
 //delete category
-router.delete("/:_id", async(req, res, next) => {
+router.delete("/:_id", async (req, res, next) => {
     try {
-        const {_id} = req.params
+        const { _id } = req.params
         const cat = await deleteACategory(_id)
 
         cat?._id ?
-        responder.SUCCESS({
-            res, message: "The category has been deleted"
-        }) :
-        responder.ERROR({
-            res, message: "Error deleting category, try again later!"
-        })
+            responder.SUCCESS({
+                res, message: "The category has been deleted"
+            }) :
+            responder.ERROR({
+                res, message: "Error deleting category, try again later!"
+            })
     } catch (error) {
         next(error)
     }
