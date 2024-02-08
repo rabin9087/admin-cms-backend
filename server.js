@@ -33,7 +33,7 @@ app.use("/api/v1/products", adminAuth, productRouter)
 app.get("/", (req, res) => {
     res.json({
         status: "success",
-        message: "server is running"
+        message: "server is running at admin cricket gear"
     })
 })
 
