@@ -25,8 +25,8 @@ app.use(morgan("    "))
 // app.use(express.static(path.join(__dirname, "/public")))
 
 //local middleware
-app.use("/api/v1/users",  userRouter)
-app.use("/api/v1/categories", categoryRouter)
+app.use("/api/v1/users", userRouter)
+app.use("/api/v1/categories", adminAuth, categoryRouter)
 app.use("/api/v1/products", adminAuth, productRouter)
 
 
