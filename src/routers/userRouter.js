@@ -111,7 +111,6 @@ router.post("/", newAdminValidate, async (req, res, next) => {
         if (user?._id) {
             const c = uuidv4();//this must be store in db
             const token = await createNewSession({ token: c, associate: user.email })
-            console.log(token)
             if (token?._id) {
                 const url = `${process.env.CLIENT_ROOT_DOMAIN}/verify-email?e=${user.email}&c=${c}`
 
