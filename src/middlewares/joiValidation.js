@@ -9,6 +9,7 @@ const LONGSTR = Joi.string().max(500).allow(null, "")
 const LONGSTRREQUIRED = LONGSTR.required()
 const EMAIL = Joi.string().email({ minDomainSegments: 2 }).max(100)
 const EMAILREQUIRED = EMAIL.required()
+const FILESREQUIRED = Joi.object().required()
 
 const joiValidator = ({ schema, req, res, next }) => {
     try {
@@ -44,7 +45,7 @@ export const resetPasswordValidate = (req, res, next) => {
 }
 
 export const newProductValidate = (req, res, next) => {
-  
+
     const schema = Joi.object({
         // status: SHORTSTRREQUIRED,
         name: SHORTSTRREQUIRED,
@@ -61,7 +62,7 @@ export const newProductValidate = (req, res, next) => {
 }
 
 export const updateProductValidate = (req, res, next) => {
-  
+
     const schema = Joi.object({
         status: SHORTSTRREQUIRED,
         _id: SHORTSTRREQUIRED,

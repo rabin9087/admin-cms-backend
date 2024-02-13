@@ -21,8 +21,8 @@ app.use(express.json())
 app.use(morgan("    "))
 
 // //server statice files
-// const __dirname = path.resolve()
-// app.use(express.static(path.join(__dirname, "/public")))
+const __dirname = path.resolve()
+app.use(express.static(path.join(__dirname, "/public")))
 
 //local middleware
 app.use("/api/v1/users", userRouter)
