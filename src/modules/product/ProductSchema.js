@@ -31,32 +31,37 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    salesStartDate: {
-        type: Date,
-    },
-    salesEndDate: {
-        type: Date,
-    },
-    sku: {
-        type: String,
-        unique: true,
-        index: 1,
-        required: true
-    },
-
-    description: {
-        type: String,
-        required: true,
-    },
-    thumbnail: {
-        type: String,
-    },
-   
-    images: [
+    sizes: [
         {
             type: String,
         },
     ],
+    salesStartDate: {
+    type: Date,
+},
+    salesEndDate: {
+    type: Date,
+},
+    sku: {
+    type: String,
+    unique: true,
+    index: 1,
+    required: true
+},
+
+    description: {
+    type: String,
+    required: true,
+},
+    thumbnail: {
+    type: String,
+},
+
+    images: [
+    {
+        type: String,
+    },
+],
 }, {
     timestamps: true,
 })

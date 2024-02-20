@@ -3,7 +3,7 @@ import { responder } from '../middlewares/response.js'
 import slugify from 'slugify'
 import { newProductValidate, updateProductValidate } from '../middlewares/joiValidation.js'
 import { getAProduct, getProducts, insertProduct, updateProduct, updateProductById } from '../modules/product/ProductModel.js'
-import { cloudinaryUpload, multerUpload, s3bucketUpload } from '../utils/upload/imageUpload.js'
+import { cloudinaryUpload, multerUpload, s3bucketUpload } from '../utils/upload/cloudinary.js'
 // import { deleteACategory, getCategories, insertCategory, updateCategory } from '../modules/category/CategoryModel.js'
 const router = express.Router()
 
@@ -13,18 +13,20 @@ const upload = multerUpload()
 
 //create new category
 router.post("/", upload.array("images", 5), newProductValidate, async (req, res, next) => {
-    // router.post("/",  newProductValidate, async (req, res, next) => {
+
     try {
 
-          if (req.files?.length) {
+        if (req.files?.length) {
             const newImgs = req.files.map((item) => item.path.slice(6))
-
             req.body.images = newImgs
             req.body.thumbnail = newImgs[0]
+
         }
+
+        req.body.sizes = req.body?.sizes.split(", ")
         req.body.slug = slugify(req.body.name, { lower: true, trim: true, })
 
-        //insert into db 
+        // insert into db 
 
         const product = await insertProduct(req.body)
 
@@ -71,7 +73,7 @@ router.put("/", upload.array("newImages", 5), updateProductValidate, async (req,
             const newImgs = req.files.map((item) => item.path?.slice(6))
             req.body.images = [...req.body.images, ...newImgs]
         }
-
+        req.body.sizes = req.body?.sizes.split(", ")
         //insert into db 
         const product = await updateProductById(req.body)
         product?._id ?

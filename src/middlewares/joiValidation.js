@@ -45,7 +45,6 @@ export const resetPasswordValidate = (req, res, next) => {
 }
 
 export const newProductValidate = (req, res, next) => {
-
     const schema = Joi.object({
         // status: SHORTSTRREQUIRED,
         name: SHORTSTRREQUIRED,
@@ -53,6 +52,8 @@ export const newProductValidate = (req, res, next) => {
         sku: SHORTSTRREQUIRED,
         price: NUMREQUIRED,
         qty: NUMREQUIRED,
+        sizes: LONGSTRREQUIRED,
+        images: LONGSTRREQUIRED,
         salesPrice: NUM,
         description: LONGSTRREQUIRED,
         salesStartDate: SHORTSTR,
@@ -70,6 +71,7 @@ export const updateProductValidate = (req, res, next) => {
         parentCatId: SHORTSTRREQUIRED,
         price: NUMREQUIRED,
         qty: NUMREQUIRED,
+        sizes: LONGSTRREQUIRED,
         salesPrice: NUM,
         description: LONGSTRREQUIRED,
         salesStartDate: SHORTSTR,

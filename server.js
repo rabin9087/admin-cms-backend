@@ -18,7 +18,7 @@ connectDB()
 
 app.use(cors())
 app.use(express.json())
-app.use(morgan("    "))
+app.use(morgan(""))
 
 // //server statice files
 const __dirname = path.resolve()
