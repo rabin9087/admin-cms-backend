@@ -2,11 +2,12 @@ import "dotenv/config"
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
-import userRouter from './src/routers/userRouter.js'
 import { connectDB } from './src/config/mongoConfig.js'
-import categoryRouter from "./src/routers/categoryRouter.js"
 import { adminAuth } from "./src/middlewares/authMiddleware.js"
+import userRouter from './src/routers/userRouter.js'
+import categoryRouter from "./src/routers/categoryRouter.js"
 import productRouter from "./src/routers/productRouter.js"
+import orderRouter from "./src/routers/orderRouter.js"
 import path from 'path'
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, "/public")))
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/categories", adminAuth, categoryRouter)
 app.use("/api/v1/products", adminAuth, productRouter)
+app.use("/api/v1/orders", adminAuth, orderRouter)
 
 
 app.get("/", (req, res) => {
