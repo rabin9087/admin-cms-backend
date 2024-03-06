@@ -1,31 +1,32 @@
-import ProductSchema from './ProductSchema.js'
+import Product from "./ProductSchema.js"
+
 
 export const insertProduct = (productObj) => {
-    return ProductSchema(productObj).save()
+    return Product(productObj).save()
 }
 
 export const updateProduct = (filter, update) => {
-    return ProductSchema.findOneAndUpdate(filter, update, { new: true })
+    return Product.findOneAndUpdate(filter, update, { new: true })
 }
 
-export const updateProductById = ({_id, ...rest}) => {
-    return ProductSchema.findOneAndUpdate({_id}, rest, { new: true })
+export const updateProductById = ({ _id, ...rest }) => {
+    return Product.findOneAndUpdate({ _id }, rest, { new: true })
 }
 
 export const getProducts = () => {
-    return ProductSchema.find()
+    return Product.find()
 }
 
 //get product by filter
 export const getAProduct = (filter) => {
-    return ProductSchema.findOne(filter)
+    return Product.findOne(filter)
 }
 
 //by slug
 export const getAProductBySlug = (slug) => {
-    return ProductSchema.findOne(slug)
+    return Product.findOne(slug)
 }
 
 export const deleteAProduct = (_id) => {
-    return ProductSchema.findByIdAndDelete(_id)
+    return Product.findByIdAndDelete(_id)
 }

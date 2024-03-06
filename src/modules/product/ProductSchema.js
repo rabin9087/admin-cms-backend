@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-
+const { models } = mongoose
 const productSchema = new mongoose.Schema({
     status: {
         type: String,
@@ -37,33 +37,35 @@ const productSchema = new mongoose.Schema({
         },
     ],
     salesStartDate: {
-    type: Date,
-},
+        type: Date,
+    },
     salesEndDate: {
-    type: Date,
-},
+        type: Date,
+    },
     sku: {
-    type: String,
-    unique: true,
-    index: 1,
-    required: true
-},
+        type: String,
+        unique: true,
+        index: 1,
+        required: true
+    },
 
     description: {
-    type: String,
-    required: true,
-},
+        type: String,
+        required: true,
+    },
     thumbnail: {
-    type: String,
-},
-
-    images: [
-    {
         type: String,
     },
-],
+
+    images: [
+        {
+            type: String,
+        },
+    ],
 }, {
     timestamps: true,
 })
 
-export default mongoose.model("Product", productSchema)
+
+const Product = models.Product || mongoose.model("Product", productSchema)
+export default Product
