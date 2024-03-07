@@ -46,7 +46,6 @@ export const refreshAuth = async (req, res, next) => {
         }
         responder.ERROR({ res, errorCode: 401, message: "Unauthorized user" })
     } catch (error) {
-        console.log(error.message)
         if (error.message.includes("jwt must be provided")) {
             return responder.ERROR({
                 res, errorCode: 403,

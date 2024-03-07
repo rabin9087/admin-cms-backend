@@ -12,6 +12,8 @@ export const getCategories = () => {
     return CategorySchema.find()
 }
 
+
+
 export const getACategory = (filter) => {
     return CategorySchema.findOne(filter)
 }

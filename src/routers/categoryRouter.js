@@ -48,6 +48,7 @@ router.get("/", async (req, res, next) => {
     }
 })
 
+
 //update the category
 router.put("/", async (req, res, next) => {
     try {

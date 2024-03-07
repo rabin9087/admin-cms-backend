@@ -2,31 +2,33 @@ import express from 'express'
 import { responder } from '../middlewares/response.js'
 import slugify from 'slugify'
 import { newProductValidate, updateProductValidate } from '../middlewares/joiValidation.js'
-import { getAProduct, getProducts, insertProduct, updateProduct, updateProductById } from '../modules/product/ProductModel.js'
+import { getAProduct, getManyProductByCatId, getProducts, insertProduct, updateProduct, updateProductById } from '../modules/product/ProductModel.js'
 import { cloudinaryUpload, multerUpload, s3bucketUpload } from '../utils/upload/cloudinary.js'
 // import { deleteACategory, getCategories, insertCategory, updateCategory } from '../modules/category/CategoryModel.js'
 const router = express.Router()
 
-const upload = multerUpload()
-// const upload = s3bucketImage()
+// const upload = multerUpload()
+const upload = s3bucketUpload()
 
 
 //create new category
-router.post("/", upload.array("images", 5), newProductValidate, async (req, res, next) => {
-
+// router.post("/", upload.array("images", 5), newProductValidate, async (req, res, next) => {
+router.post("/", newProductValidate, async (req, res, next) => {
     try {
 
         if (req.files?.length) {
-            const newImgs = req.files.map((item) => item.path.slice(6))
-            req.body.images = newImgs
-            req.body.thumbnail = newImgs[0]
+
+            //multer upload
+            // const newImgs = req.files.map((item) => item.path.slice(6))
+            // req.body.images = newImgs
+            req.body.thumbnail = req.body.images[0]
 
         }
 
         req.body.sizes = req.body?.sizes.split(", ")
         req.body.slug = slugify(req.body.name, { lower: true, trim: true, })
 
-        // insert into db 
+        console.log("This is req.body", req.body)
 
         const product = await insertProduct(req.body)
 
@@ -93,6 +95,21 @@ router.put("/", upload.array("newImages", 5), updateProductValidate, async (req,
         next(error)
     }
 })
+
+//get category
+router.get("/parentCatId/:id", async (req, res, next) => {
+    console.log(req.params)
+    try {
+        console.log(req.body)
+        const products = await getManyProductByCatId(req.params)
+        responder.SUCCESS({
+            res, message: "Here are lists of all Categories", products
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
 
 //delete category
 // router.delete("/:_id", async(req, res, next) => {

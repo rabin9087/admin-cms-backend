@@ -21,7 +21,7 @@ app.use(cors())
 app.use(express.json())
 app.use(morgan(""))
 
-// //server statice files
+//server statice files
 const __dirname = path.resolve()
 app.use(express.static(path.join(__dirname, "/public")))
 

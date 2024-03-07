@@ -1,5 +1,5 @@
 import Product from "./ProductSchema.js"
-
+import mongoose from 'mongoose'
 
 export const insertProduct = (productObj) => {
     return Product(productObj).save()
@@ -11,6 +11,12 @@ export const updateProduct = (filter, update) => {
 
 export const updateProductById = ({ _id, ...rest }) => {
     return Product.findOneAndUpdate({ _id }, rest, { new: true })
+}
+
+export const getManyProductByCatId = (parentCatId) => {
+    var id = new mongoose.Types.ObjectId(parentCatId);
+    console.log("This is parentID", parentCatId)
+    return Product.find({ parentCatId: id })
 }
 
 export const getProducts = () => {

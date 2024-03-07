@@ -6,7 +6,6 @@ const router = express.Router()
 router.get("/:_id?", async (req, res, next) => {
     try {
         const { _id } = req.params
-        console.log(_id)
         const orders = _id ? await getAOrderByID(_id) : await getAllOrders();
         if (orders.length > 0) {
             return res.status(200).json({
@@ -36,7 +35,6 @@ router.get("/:_id?", async (req, res, next) => {
 
 router.put("/:_id", async (req, res, next) => {
     try {
-
         const { _id } = req.params
         const data = await updateOrderByID(_id, req.body)
         if (data?._id) {
