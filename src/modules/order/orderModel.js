@@ -1,10 +1,14 @@
-import mongoose, { Schema, model } from 'mongoose'
+import mongoose, { Schema, Types, model } from 'mongoose'
 import Product from '../product/ProductSchema.js'
 const stringType = {
     type: String,
     required: true,
 }
 const OrderSchema = model("order", {
+    userId: {
+        type: String,
+        default: ""
+    },
     deliveryStatus: stringType,
     address: {
         email: stringType,
@@ -24,6 +28,10 @@ const OrderSchema = model("order", {
         orderQty: { type: Number, required: true },
         size: { type: String, required: true },
         deliveryStatus: stringType,
+        dispatchedQty: {
+            type: Number,
+            default: 0
+        },
     }
 
     ],
@@ -32,6 +40,7 @@ const PopulateProduct = (query) => {
     return query.populate({ path: 'items._id', select: '', model: Product })
 
 }
+
 export const getAllOrders = () => {
     return PopulateProduct(OrderSchema.find())
 }
