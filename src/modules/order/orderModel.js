@@ -45,6 +45,11 @@ export const getAllOrders = () => {
     return PopulateProduct(OrderSchema.find())
 }
 
+export const getOrderNumberByUser = (userId) => {
+    console.log(userId)
+    return OrderSchema.find(userId)
+}
+
 export const getAOrderByID = (_id) => {
     return PopulateProduct(OrderSchema.findOne({ _id }))
 }

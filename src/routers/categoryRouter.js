@@ -1,7 +1,7 @@
 import express from 'express'
 import { responder } from '../middlewares/response.js'
 import slugify from 'slugify'
-import { deleteACategory, getCategories, insertCategory, updateCategory } from '../modules/category/CategoryModel.js'
+import { deleteACategory, getACategory, getCategories, insertCategory, updateCategory } from '../modules/category/CategoryModel.js'
 const router = express.Router()
 
 //create new category
@@ -37,9 +37,12 @@ router.post("/", async (req, res, next) => {
 })
 
 //get category
-router.get("/", async (req, res, next) => {
+router.get("/:_id", async (req, res, next) => {
     try {
-        const categories = await getCategories()
+        console.log("THis is categories Req", req.params)
+        const { _id } = req.params
+        const categories = _id ? await getACategory() : await getCategories()
+        console.log(categories)
         responder.SUCCESS({
             res, message: "Here are lists of all Categories", categories
         })

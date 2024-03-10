@@ -8,6 +8,7 @@ import userRouter from './src/routers/userRouter.js'
 import categoryRouter from "./src/routers/categoryRouter.js"
 import productRouter from "./src/routers/productRouter.js"
 import orderRouter from "./src/routers/orderRouter.js"
+import customerRouter from "./src/routers/customerRouter.js"
 import path from 'path'
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -30,6 +31,7 @@ app.use("/api/v1/users", userRouter)
 app.use("/api/v1/categories", adminAuth, categoryRouter)
 app.use("/api/v1/products", adminAuth, productRouter)
 app.use("/api/v1/orders", adminAuth, orderRouter)
+app.use("/api/v1/customers", adminAuth, customerRouter)
 
 
 app.get("/", (req, res) => {
