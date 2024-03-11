@@ -9,15 +9,19 @@ export const allUsers = () => {
 }
 
 export const allCustomers = () => {
-    return UserSchema.find({ status: "active", role: "user" })
+    return UserSchema.find({ role: "user" })
 }
 
 export const allAdmins = () => {
-    return UserSchema.find({ status: "active", role: "admin" })
+    return UserSchema.find({ role: "admin" })
 }
 
 export const updateUser = (filter, update) => {
     return UserSchema.findOneAndUpdate(filter, update, { new: true })
+}
+
+export const updateUserStatus = (filter) => {
+    return UserSchema.findByIdAndUpdate(filter)
 }
 
 export const getUserByEmail = (filter) => {

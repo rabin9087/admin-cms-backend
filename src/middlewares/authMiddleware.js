@@ -5,6 +5,7 @@ import { responder } from "./response.js"
 
 export const adminAuth = async (req, res, next) => {
     try {
+
         //get access jwt and verify
         const { authorization } = req.headers
         const decoded = verifyAccessJWTTokne(authorization)

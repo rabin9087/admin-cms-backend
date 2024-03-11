@@ -13,19 +13,18 @@ const upload = s3bucketUpload()
 
 //create new category
 // router.post("/", upload.array("images", 5), newProductValidate, async (req, res, next) => {
-router.post("/", newProductValidate, async (req, res, next) => {
+router.post("/", async (req, res, next) => {
     try {
-
         if (req.files?.length) {
 
             //multer upload
             // const newImgs = req.files.map((item) => item.path.slice(6))
             // req.body.images = newImgs
-            req.body.thumbnail = req.body.images[0]
+            req.body.thumbnail = req.body?.images[0]
 
         }
 
-        req.body.sizes = req.body?.sizes.split(", ")
+        req.body.sizes = req.body?.sizes?.split(", ")
         req.body.slug = slugify(req.body.name, { lower: true, trim: true, })
 
         console.log("This is req.body", req.body)
@@ -57,6 +56,18 @@ router.get("/:_id?", async (req, res, next) => {
         const products = _id ? await getAProduct({ _id }) : await getProducts()
         responder.SUCCESS({
             res, message: "TO do get", products
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.patch("/", async (req, res, next) => {
+    try {
+
+        await updateProductById(req.body)
+        responder.SUCCESS({
+            res, message: "Update status successfully"
         })
     } catch (error) {
         next(error)

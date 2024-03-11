@@ -8,16 +8,13 @@ const router = express.Router()
 router.post("/", async (req, res, next) => {
     try {
         const { title } = req.body
-
         const obj = {
             title, slug: slugify(title, {
                 lower: true,
                 trim: true
             })
         }
-
         const cat = await insertCategory(obj)
-
         cat?._id ?
             responder.SUCCESS({
                 res, message: "New Category has been added successfully"
@@ -37,11 +34,23 @@ router.post("/", async (req, res, next) => {
 })
 
 //get category
+router.get("/", async (req, res, next) => {
+    try {
+
+        const categories = await getCategories()
+
+        responder.SUCCESS({
+            res, message: "Here are lists of all Categories", categories
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
 router.get("/:_id", async (req, res, next) => {
     try {
-        console.log("THis is categories Req", req.params)
         const { _id } = req.params
-        const categories = _id ? await getACategory() : await getCategories()
+        const categories = await getACategory({ _id })
         console.log(categories)
         responder.SUCCESS({
             res, message: "Here are lists of all Categories", categories
@@ -51,13 +60,31 @@ router.get("/:_id", async (req, res, next) => {
     }
 })
 
-
 //update the category
 router.put("/", async (req, res, next) => {
     try {
         const { _id, title, status } = req.body
         if (_id && title && status) {
             const cat = await updateCategory({ _id }, { title, status })
+            if (cat?._id) {
+                return responder.SUCCESS({
+                    res, message: "The Category has been updated successfully"
+                })
+            }
+        }
+        responder.ERROR({
+            res, message: "Invalid data"
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.patch("/", async (req, res, next) => {
+    try {
+        const { _id, status } = req.body
+        if (_id && status) {
+            const cat = await updateCategory({ _id }, { status })
             if (cat?._id) {
                 return responder.SUCCESS({
                     res, message: "The Category has been updated successfully"

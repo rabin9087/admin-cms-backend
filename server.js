@@ -34,6 +34,7 @@ app.use("/api/v1/orders", adminAuth, orderRouter)
 app.use("/api/v1/customers", adminAuth, customerRouter)
 
 
+
 app.get("/", (req, res) => {
     res.json({
         status: "success",
@@ -42,7 +43,6 @@ app.get("/", (req, res) => {
 })
 
 app.use((error, req, res, next) => {
-    console.log(error, "---------------")
     const errorCode = error.errorCode || 500
 
     res.status(errorCode).json({

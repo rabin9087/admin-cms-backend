@@ -102,11 +102,8 @@ router.post("/verify-email", async (req, res, next) => {
 // private router
 router.post("/", newAdminValidate, async (req, res, next) => {
     try {
-
         const { password } = req.body
-
         req.body.password = hashPassword(password)
-
         const user = await insertUser(req.body)
         if (user?._id) {
             const c = uuidv4();//this must be store in db

@@ -46,7 +46,6 @@ export const getAllOrders = () => {
 }
 
 export const getOrderNumberByUser = (userId) => {
-    console.log(userId)
     return OrderSchema.find(userId)
 }
 
