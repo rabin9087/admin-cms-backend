@@ -45,7 +45,6 @@ export const resetPasswordValidate = (req, res, next) => {
 }
 
 export const newProductValidate = (req, res, next) => {
-    console.log("This is req.body Validation", req.body)
     const schema = Joi.object({
         // status: SHORTSTRREQUIRED,
         name: SHORTSTRREQUIRED,
@@ -54,7 +53,7 @@ export const newProductValidate = (req, res, next) => {
         price: NUMREQUIRED,
         qty: NUMREQUIRED,
         sizes: LONGSTRREQUIRED,
-        images: LONGSTRREQUIRED,
+        images: LONGSTR,
         salesPrice: NUM,
         description: LONGSTRREQUIRED,
         salesStartDate: SHORTSTR,
