@@ -34,11 +34,7 @@ router.post("/", upload.array("images", 5), async (req, res, next) => {
             console.log(req.files)
             //multer upload
             req.body.images = req.files.map((item) => item.location)
-
-
             req.body.thumbnail = req.files[0].location
-
-
         }
 
 
@@ -92,9 +88,21 @@ router.patch("/", async (req, res, next) => {
     }
 })
 
-router.put("/", upload.array("newImages", 5), updateProductValidate, async (req, res, next) => {
+router.put("/", upload.array("images", 5), updateProductValidate, async (req, res, next) => {
     try {
         // handel deleting imges
+
+        // const { imgToDelete } = req.body
+        // req.body.images = req.body?.images.split(",")
+        // if (imgToDelete?.length) {
+        //     req.body.images = req.body?.images.filter((url) => !imgToDelete.includes(url))
+        // }
+        // if (req.files?.length) {
+        //     const newImgs = req.files.map((item) => item.path?.slice(6))
+        //     req.body.images = [...req.body.images, ...newImgs]
+        // }
+        // req.body.sizes = req.body?.sizes.split(", ")
+
 
         const { imgToDelete } = req.body
         req.body.images = req.body?.images.split(",")
@@ -102,10 +110,14 @@ router.put("/", upload.array("newImages", 5), updateProductValidate, async (req,
             req.body.images = req.body?.images.filter((url) => !imgToDelete.includes(url))
         }
         if (req.files?.length) {
-            const newImgs = req.files.map((item) => item.path?.slice(6))
+            console.log(req.files)
+            //multer upload
+            const newImgs = req.files.map((item) => item.location)
             req.body.images = [...req.body.images, ...newImgs]
+            req.body.thumbnail = req.files[0].location
         }
         req.body.sizes = req.body?.sizes.split(", ")
+
         //insert into db 
         const product = await updateProductById(req.body)
         product?._id ?
