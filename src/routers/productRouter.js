@@ -12,19 +12,35 @@ const upload = s3bucketUpload()
 
 
 //create new category
-router.post("/", upload.array("images", 5), newProductValidate, async (req, res, next) => {
-    // router.post("/", newProductValidate, async (req, res, next) => {
+// router.post("/", upload.array("images", 5), newProductValidate, async (req, res, next) => {
+router.post("/", upload.array("images", 5), async (req, res, next) => {
     try {
 
-        // console.log("This is product req.body:", req.body)
-        if (req.files?.length) {
+        //when using multer
+        // if (req.files?.length) {
+        //     console.log(req.files)
+        //     //multer upload
+        //     const newImgs = req.files.map((item) => item.path.slice(6))
+        //     req.body.images = newImgs
 
+        //     if (newImgs.length) {
+
+        //         req.body.thumbnail = newImgs[0]
+        //     }
+
+        // }
+        // using aws s3bucket
+        if (req.files?.length) {
+            console.log(req.files)
             //multer upload
-            // const newImgs = req.files.map((item) => item.path.slice(6))
-            // req.body.images = newImgs
-            req.body.thumbnail = req.body?.images[0]
+            req.body.images = req.files.map((item) => item.location)
+
+
+            req.body.thumbnail = req.files[0].location
+
 
         }
+
 
         req.body.sizes = req.body?.sizes?.split(", ")
         req.body.slug = slugify(req.body.name, { lower: true, trim: true, })
@@ -79,7 +95,7 @@ router.patch("/", async (req, res, next) => {
 router.put("/", upload.array("newImages", 5), updateProductValidate, async (req, res, next) => {
     try {
         // handel deleting imges
-        console.log("Thoisdo  req.body of prodyct:", req.body)
+
         const { imgToDelete } = req.body
         req.body.images = req.body?.images.split(",")
         if (imgToDelete?.length) {
