@@ -2,7 +2,7 @@ import express from 'express'
 import { responder } from '../middlewares/response.js'
 import slugify from 'slugify'
 import { newProductValidate, updateProductValidate } from '../middlewares/joiValidation.js'
-import { getAProduct, getManyProductByCatId, getProducts, insertProduct, updateProduct, updateProductById } from '../modules/product/ProductModel.js'
+import { getAProduct, getManyProductByCatId, getProducts, getProductsNumber, insertProduct, updateProduct, updateProductById } from '../modules/product/ProductModel.js'
 import { cloudinaryUpload, multerUpload, s3bucketUpload } from '../utils/upload/cloudinary.js'
 // import { deleteACategory, getCategories, insertCategory, updateCategory } from '../modules/category/CategoryModel.js'
 const router = express.Router()
@@ -64,12 +64,18 @@ router.post("/", upload.array("images", 5), async (req, res, next) => {
 })
 
 //get category
-router.get("/:_id?", async (req, res, next) => {
+router.get("/:number?", async (req, res, next) => {
     try {
-        const { _id } = req.params
-        const products = _id ? await getAProduct({ _id }) : await getProducts()
+        const { number } = req.params
+        // const { number } = req.query
+
+        console.log("this is req", req.params)
+        // const {number} = req.body
+        // const products = number ? await getAProduct({ number }) : await getProducts(parseInt(number))
+        const products = await getProducts(parseInt(number))
+        const productLength = await getProductsNumber()
         responder.SUCCESS({
-            res, message: "TO do get", products
+            res, message: "TO do get", products, productLength: productLength.length
         })
     } catch (error) {
         next(error)
@@ -103,7 +109,7 @@ router.put("/", upload.array("images", 5), updateProductValidate, async (req, re
         // }
         // req.body.sizes = req.body?.sizes.split(", ")
 
-
+        console.log("This is req.body", req.body)
         const { imgToDelete } = req.body
         req.body.images = req.body?.images.split(",")
         if (imgToDelete?.length) {
@@ -140,9 +146,8 @@ router.put("/", upload.array("images", 5), updateProductValidate, async (req, re
 
 //get category
 router.get("/parentCatId/:id", async (req, res, next) => {
-    console.log(req.params)
+
     try {
-        console.log(req.body)
         const products = await getManyProductByCatId(req.params)
         responder.SUCCESS({
             res, message: "Here are lists of all Categories", products

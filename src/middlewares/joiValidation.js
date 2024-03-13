@@ -63,7 +63,7 @@ export const newProductValidate = (req, res, next) => {
 }
 
 export const updateProductValidate = (req, res, next) => {
-
+    console.log("This is req.body", req.body)
     const schema = Joi.object({
         status: SHORTSTRREQUIRED,
         _id: SHORTSTRREQUIRED,

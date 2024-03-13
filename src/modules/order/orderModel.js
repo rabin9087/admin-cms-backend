@@ -41,8 +41,8 @@ const PopulateProduct = (query) => {
 
 }
 
-export const getAllOrders = () => {
-    return PopulateProduct(OrderSchema.find())
+export const getAllOrders = (number) => {
+    return PopulateProduct(OrderSchema.find().limit(5).skip(number))
 }
 
 export const getOrderNumberByUser = (userId) => {

@@ -19,7 +19,11 @@ export const getManyProductByCatId = (parentCatId) => {
     return Product.find({ parentCatId: id })
 }
 
-export const getProducts = () => {
+export const getProducts = (number) => {
+    return Product.find().limit(5).skip(number)
+}
+
+export const getProductsNumber = () => {
     return Product.find()
 }
 
