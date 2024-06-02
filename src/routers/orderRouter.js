@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAOrderByID, getAllOrders, updateDeliveryStatusByID, updateOrderByID } from '../modules/order/orderModel.js'
+import { getAOrderByID, getAllOrders, getAllOrdersLength, updateDeliveryStatusByID, updateOrderByID } from '../modules/order/orderModel.js'
 import { responder } from '../middlewares/response.js'
 const router = express.Router()
 
@@ -37,11 +37,13 @@ router.get("/skip/:number?", async (req, res, next) => {
     try {
         const { number } = req.params
         const orders = await getAllOrders(number);
+        const orderLength = await getAllOrdersLength()
         if (orders.length > 0) {
             return res.status(200).json({
                 status: "success",
                 message: "here are all orders",
-                orders: orders
+                orders: orders,
+                orderLength: orderLength.length
             })
         } else if (orders?._id) {
             return res.status(200).json({

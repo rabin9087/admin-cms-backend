@@ -42,7 +42,13 @@ const PopulateProduct = (query) => {
 }
 
 export const getAllOrders = (number) => {
-    return PopulateProduct(OrderSchema.find().limit(5).skip(number))
+    return PopulateProduct(OrderSchema.find()
+        .limit(5).skip(number)
+    )
+}
+
+export const getAllOrdersLength = () => {
+    return PopulateProduct(OrderSchema.find())
 }
 
 export const getOrderNumberByUser = (userId) => {
